@@ -1,0 +1,59 @@
+{
+  "name": "Claude Code",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "TZ": "${localEnv:TZ:America/Los_Angeles}"
+    }
+  },
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-vscode.powershell",
+        "ms-vscode.vscode-json",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "tomoyukim.vscode-mermaid-editor",
+        "mechatroner.rainbow-csv",
+        "ms-vscode.makefile-tools",
+        "mutantdino.resourcemonitor",
+        "Anthropic.claude-code"
+      ],
+      "settings": {
+        "ansible.python.interpreterPath": "${localEnv:PYTHON_INTERPRETER_PATH:/usr/local/bin/python}",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eclauslint": "explicit"
+        },
+        "files.autoSave": "onFocusChange",
+        "python.defaultInterpreterPath": "${localEnv:PYTHON_INTERPRETER_PATH:/usr/local/bin/python}",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          },
+          "zsh": {
+            "path": "zsh"
+          }
+        }
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-bashhistory,target=/commandhistory,type=volume",
+    "source=${localWorkspaceFolderBasename}-config,target=/home/vscode/.claude,type=volume"
+  ],
+  "remoteEnv": {
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/${localWorkspaceFolderBasename},type=bind,consistency=delegated",
+  "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "sudo /usr/local/bin/init-firewall.sh && /workspace/${localWorkspaceFolderBasename}/.devcontainer/post-create.sh"
+}
