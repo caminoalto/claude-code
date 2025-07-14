@@ -1,15 +1,17 @@
 services:
   devcontainer:
-    container_name: "${PROJECT_NAME:-devcontainer}-devcontainer"
+    container_name: "${COMPOSE_PROJECT_NAME:-devcontainer}"
+    env_file:
+      - ../.env
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       args:
         TZ: "${TZ:-America/Los_Angeles}"
     volumes:
-      - ..:/workspace/${PROJECT_NAME:-project}:cached
-      - ${PROJECT_NAME:-project}-bashhistory:/commandhistory
-      - ${PROJECT_NAME:-project}-config:/home/vscode/.claude
+      - ..:/workspace:cached
+      - claude-code-bashhistory:/commandhistory
+      - claude-code-config:/home/vscode/.claude
     cap_add:
       - NET_ADMIN
       - NET_RAW
@@ -20,5 +22,5 @@ services:
     command: sleep infinity
 
 volumes:
-  ${PROJECT_NAME:-project}-bashhistory:
-  ${PROJECT_NAME:-project}-config:
+  claude-code-bashhistory:
+  claude-code-config:

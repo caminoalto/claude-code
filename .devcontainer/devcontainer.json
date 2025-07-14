@@ -4,24 +4,20 @@
   "service": "devcontainer",
 
   // Optional features - uncomment as needed for your project
-  // "features": {
-  //   "ghcr.io/devcontainers/features/docker-in-docker:2": {
-  //     "version": "latest",
-  //     "moby": false
-  //   },
-  //   "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-  //     "version": "latest"
-  //   },
-  //   "ghcr.io/devcontainers/features/powershell:1": {},
-  //   "ghcr.io/devcontainers/features/azure-cli:1": {
-  //     "installBicep": true
-  //   },
-  //   "ghcr.io/azure/azure-dev/azd:latest": {},
-  //   "ghcr.io/devcontainers/features/terraform:1": {},
-  //   "ghcr.io/devcontainers/features/aws-cli:1": {},
-  //   "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
-  //   "ghcr.io/jlaundry/devcontainer-features/mssql-odbc-driver:1": {}
-  // },
+  "features": {
+    // "ghcr.io/devcontainers/features/powershell:1": {},
+    // "ghcr.io/devcontainers/features/azure-cli:1": {
+    //   "installBicep": true
+    // },
+    // "ghcr.io/azure/azure-dev/azd:latest": {},
+    // "ghcr.io/devcontainers/features/terraform:1": {},
+    // "ghcr.io/devcontainers/features/aws-cli:1": {},
+    // "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
+    // "ghcr.io/jlaundry/devcontainer-features/mssql-odbc-driver:1": {},
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -30,21 +26,21 @@
         // "ms-azuretools.vscode-bicep",              // Bicep support
         // "ms-azuretools.azure-dev",                 // Azure Developer CLI
         // "ms-azuretools.vscode-azurefunctions",     // Azure Functions
-        // "ms-azuretools.vscode-docker",             // Docker support
         // "HashiCorp.terraform",                     // Terraform
         // "AmazonWebServices.aws-toolkit-vscode",    // AWS Toolkit
         // "ms-mssql.mssql",                          // SQL Server
 
         // Core extensions (always included)
-        "ms-python.python",
-        "ms-vscode.vscode-json",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "tomoyukim.vscode-mermaid-editor",
-        "mechatroner.rainbow-csv",
-        "ms-vscode.makefile-tools",
-        "mutantdino.resourcemonitor",
-        "Anthropic.claude-code"
+        "ms-azuretools.vscode-docker",               // Docker container management and Dockerfile support
+        "ms-python.python",                          // Python language support, debugging, and IntelliSense
+        "ms-vscode.vscode-json",                     // JSON language support with schema validation
+        "dbaeumer.vscode-eslint",                    // JavaScript/TypeScript linting and code quality
+        "esbenp.prettier-vscode",                    // Code formatting for multiple languages
+        "tomoyukim.vscode-mermaid-editor",           // Mermaid diagram creation and preview
+        "mechatroner.rainbow-csv",                   // CSV file visualization with colored columns
+        "ms-vscode.makefile-tools",                  // Makefile syntax highlighting and IntelliSense
+        "mutantdino.resourcemonitor",                // System resource monitoring in status bar
+        "Anthropic.claude-code"                      // Claude Code AI assistant integration
       ],
       "settings": {
         "ansible.python.interpreterPath": "${localEnv:PYTHON_INTERPRETER_PATH:/usr/local/bin/python}",
@@ -78,6 +74,6 @@
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
     "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
   },
-  "workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
-  "postCreateCommand": "sudo /workspace/${localWorkspaceFolderBasename}/.devcontainer/setup.sh"
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "sudo ${containerWorkspaceFolder}/.devcontainer/setup.sh"
 }
