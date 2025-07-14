@@ -81,12 +81,34 @@ cp .env.example .env
 
 ## Template Customization
 
-When using this template:
+This template uses a **hybrid approach** for tool management:
+
+### **Built-in Tools (Always Available)**
+- **Core Development**: Python 3.11, Node.js 20, Git, Claude Code
+- **Utilities**: curl, wget, jq, fzf, zsh, build-essential
+- **Container**: Docker with socket access
+- **Security**: iptables, ipset, firewall scripts
+
+### **Optional Features (Opt-in)**
+Cloud-specific tools are available as DevContainer features. To enable them, uncomment the relevant sections in `.devcontainer/devcontainer.json`:
+
+```json
+"features": {
+  "ghcr.io/devcontainers/features/azure-cli:1": {},           // Azure CLI
+  "ghcr.io/azure/azure-dev/azd:latest": {},                   // Azure Developer CLI
+  "ghcr.io/devcontainers/features/aws-cli:1": {},             // AWS CLI  
+  "ghcr.io/devcontainers/features/terraform:1": {},           // Terraform
+  "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {} // Kubernetes tools
+}
+```
+
+### **Customization Steps**
 1. **Network Configuration**: Adjust allowed IP ranges in .env for your environment
 2. **Python Dependencies**: Add packages to requirements.txt
 3. **VS Code Extensions**: Modify devcontainer.json extensions array
-4. **MCP Servers**: Update .mcp.json and .claude/settings.local.json for additional servers
-5. **Security**: The firewall blocks private network access by default - explicitly allow ranges needed
+4. **Optional Features**: Uncomment needed cloud tools in features section
+5. **MCP Servers**: Update .mcp.json and .claude/settings.local.json for additional servers
+6. **Security**: The firewall blocks private network access by default - explicitly allow ranges needed
 
 ## File Structure Patterns
 

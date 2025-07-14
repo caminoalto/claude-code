@@ -7,7 +7,7 @@ ENV TZ="$TZ"
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs
 
-# Install basic development tools
+# Install basic development tools and iptables/ipset
 RUN apt update && apt install -y less \
   git \
   procps \
@@ -18,20 +18,28 @@ RUN apt update && apt install -y less \
   unzip \
   gnupg2 \
   gh \
+  iptables \
+  ipset \
+  iproute2 \
+  dnsutils \
+  aggregate \
+  iputils-ping \
   jq \
   gcc \
   build-essential \
-  iptables \
-  curl \
-  iputils-ping \
-  dnsutils \
-  iproute2
+  docker.io \
+  gpg \
+  wget \
+  curl
 
 # Ensure default vscode user has access to /usr/local/share
 RUN mkdir -p /usr/local/share/npm-global && \
   chown -R vscode:vscode /usr/local/share
 
 ARG USERNAME=vscode
+
+# Add vscode user to docker group for Docker socket access
+RUN groupadd -f docker && usermod -aG docker ${USERNAME}
 
 # Persist bash history.
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
@@ -75,10 +83,11 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 # Install Claude
 RUN npm install -g @anthropic-ai/claude-code
 
-# Copy and set up firewall script
-COPY init-firewall.sh /usr/local/bin/
+# Switch to root to configure sudo permissions
 USER root
-RUN chmod +x /usr/local/bin/init-firewall.sh && \
-  echo "vscode ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/vscode-firewall && \
-  chmod 0440 /etc/sudoers.d/vscode-firewall
+
+# Configure sudo permissions for vscode user
+RUN echo "vscode ALL=(root) NOPASSWD: ALL" > /etc/sudoers.d/vscode-all && \
+  chmod 0440 /etc/sudoers.d/vscode-all
+
 USER vscode
