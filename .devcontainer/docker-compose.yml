@@ -1,0 +1,24 @@
+services:
+  devcontainer:
+    container_name: "${PROJECT_NAME:-devcontainer}-devcontainer"
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        TZ: "${TZ:-America/Los_Angeles}"
+    volumes:
+      - ..:/workspace/${PROJECT_NAME:-project}:cached
+      - ${PROJECT_NAME:-project}-bashhistory:/commandhistory
+      - ${PROJECT_NAME:-project}-config:/home/vscode/.claude
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      CLAUDE_CONFIG_DIR: "/home/vscode/.claude"
+      POWERLEVEL9K_DISABLE_GITSTATUS: "true"
+    command: sleep infinity
+
+volumes:
+  ${PROJECT_NAME:-project}-bashhistory:
+  ${PROJECT_NAME:-project}-config:
