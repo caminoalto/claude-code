@@ -1,0 +1,26 @@
+services:
+  devcontainer:
+    container_name: "${COMPOSE_PROJECT_NAME:-devcontainer}"
+    env_file:
+      - ../.env
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        TZ: "${TZ:-America/Los_Angeles}"
+    volumes:
+      - ..:/workspace:cached
+      - claude-code-bashhistory:/commandhistory
+      - claude-code-config:/home/vscode/.claude
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      CLAUDE_CONFIG_DIR: "/home/vscode/.claude"
+      POWERLEVEL9K_DISABLE_GITSTATUS: "true"
+    command: sleep infinity
+
+volumes:
+  claude-code-bashhistory:
+  claude-code-config:
