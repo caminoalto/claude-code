@@ -13,7 +13,6 @@ This template is adapted from the [Claude Code reference implementation](https:/
 - **Claude Code CLI** pre-installed globally
 - **Git with delta** for enhanced diff viewing
 - **Zsh with Powerlevel10k** theme and useful plugins
-- **Docker-Outside-of-Docker** - Use host Docker daemon
 - **Network tools** (iptables, ipset, curl, ping, nslookup) for firewall configuration
 
 ### ⚡ Optional Cloud Features
@@ -51,7 +50,7 @@ Choose from these DevContainer features by uncommenting in `devcontainer.json`:
   - Claude Code extension
 - **Optional extensions** for cloud features:
   - PowerShell, Bicep, Azure tools
-  - Terraform, AWS Toolkit, Docker support
+  - Terraform, AWS Toolkit
   - SQL Server tools
 - **Auto-formatting** on save with configurable settings
 - **Integrated terminal** with zsh
@@ -198,12 +197,13 @@ The template uses **Docker Compose** for flexible container orchestration:
 
 ### Setup Workflow
 
-The container setup follows a **4-step process**:
+The container setup follows a **streamlined process**:
 
-1. **01-environment-setup.sh** - Environment & Git configuration with interactive prompts
-2. **02-security-setup.sh** - Firewall & network security configuration
-3. **03-infrastructure-setup.sh** - **[Placeholder]** for external services (databases, etc.)
-4. **04-application-setup.sh** - Python packages, project structure, and development tools
+1. **initialize.sh** - Pre-container setup (.env file creation)
+2. **post-create.sh** - Post-container Python package installation and Git configuration
+3. **01-security-setup.sh** - Firewall & network security configuration
+4. **02-infrastructure-setup.sh** - **[Placeholder]** for external services (databases, etc.)
+5. **03-application-setup.sh** - Project structure and development environment finalization
 
 ## File Structure
 
@@ -211,13 +211,13 @@ The container setup follows a **4-step process**:
 .
 ├── .devcontainer/
 │   ├── devcontainer.json          # Main devcontainer configuration with optional features
-│   ├── docker-compose.yml         # Multi-container orchestration
+│   ├── docker-compose.yml         # Multi-container orchestration with bridge networks
 │   ├── Dockerfile                 # Lean container image definition
-│   ├── 01-environment-setup.sh    # Interactive environment & Git setup
-│   ├── 02-security-setup.sh       # Firewall & network security
-│   ├── 03-infrastructure-setup.sh # Placeholder for external services
-│   ├── 04-application-setup.sh    # Python packages & project structure
-│   └── setup.sh                   # Main setup orchestrator
+│   ├── initialize.sh              # Pre-container .env creation and validation
+│   ├── post-create.sh             # Post-container Python packages and Git setup
+│   ├── 01-security-setup.sh       # Firewall & network security
+│   ├── 02-infrastructure-setup.sh # Placeholder for external services
+│   └── 03-application-setup.sh    # Project structure & development tools
 ├── .claude/
 │   └── commands/
 │       └── commit.md            # Smart batch commit workflow for Claude Code
@@ -236,7 +236,6 @@ The devcontainer includes a sophisticated firewall configuration:
 ### Inbound Rules
 
 - Allows connections from specified private network ranges
-- Auto-detects and allows Docker host network
 - Blocks all other inbound connections
 
 ### Outbound Rules
@@ -252,10 +251,10 @@ Override network settings via environment variables in `.env`:
 
 ```bash
 # Allow inbound from these ranges (includes all private IP ranges)
-ALLOWED_INBOUND_RANGES="192.168.1.0/24,10.0.0.0/16,172.16.0.0/12"
+ALLOWED_INBOUND_RANGES="192.168.1.0/24,10.0.0.0/16"
 
 # Allow outbound to these private ranges (includes Docker networks)
-ALLOWED_OUTBOUND_PRIVATE_RANGES="10.0.0.0/8,192.168.0.0/16,172.16.0.0/12"
+ALLOWED_OUTBOUND_PRIVATE_RANGES="10.0.0.0/8,192.168.0.0/16"
 
 # Additional DNS servers (configured interactively or manually)
 DNS_SERVERS="192.168.1.1,8.8.8.8"
@@ -277,7 +276,6 @@ The template uses a **hybrid approach** for extensions:
 
 - **PowerShell:** Cross-platform PowerShell support
 - **Azure Tools:** Bicep, Azure Developer CLI, Azure Functions
-- **Docker:** Docker container management
 - **Terraform:** Infrastructure as code support
 - **AWS:** AWS Toolkit for VS Code
 - **SQL Server:** Database development tools
