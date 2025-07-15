@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1] - 2024-07-14
+
+### Fixed
+
+- Moved .env creation to container initialization
+
+### Removed
+
+- Docker outside of docker feature
+
 ## [0.2.0] - 2024-07-14
 
 ### Added

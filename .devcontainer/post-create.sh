@@ -18,22 +18,15 @@ fi
 # Make all scripts executable
 chmod +x "$SCRIPT_DIR"/*.sh
 
-# Step 1: Environment setup (no sudo needed)
-echo ""
-"$SCRIPT_DIR/01-environment-setup.sh"
-if [ $? -ne 0 ]; then
-    echo "❌ Environment setup failed!"
-    exit 1
-fi
-
-# Step 2: Security setup (needs sudo) - controlled by ENABLE_FIREWALL flag
+# Note: Step 1 (Environment setup) is handled by initializeCommand
+# Starting with Step 2: Security setup (needs sudo)
 
 if [ "$EUID" -eq 0 ]; then
     # Already running as root
-    "$SCRIPT_DIR/02-security-setup.sh"
+    "$SCRIPT_DIR/01-security-setup.sh"
 else
     # Need to use sudo
-    sudo "$SCRIPT_DIR/02-security-setup.sh"
+    sudo "$SCRIPT_DIR/01-security-setup.sh"
 fi
 if [ $? -ne 0 ]; then
     echo "❌ Security setup failed!"
@@ -43,7 +36,7 @@ fi
 
 # Step 3: Infrastructure setup (no sudo needed)
 echo ""
-"$SCRIPT_DIR/03-infrastructure-setup.sh"
+"$SCRIPT_DIR/02-infrastructure-setup.sh"
 if [ $? -ne 0 ]; then
     echo "❌ Infrastructure setup failed!"
     exit 1
@@ -51,7 +44,7 @@ fi
 
 # Step 4: Application setup (no sudo needed)
 echo ""
-"$SCRIPT_DIR/04-application-setup.sh"
+"$SCRIPT_DIR/03-application-setup.sh"
 if [ $? -ne 0 ]; then
     echo "❌ Application setup failed!"
     exit 1

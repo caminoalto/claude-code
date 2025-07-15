@@ -20,7 +20,16 @@ services:
       CLAUDE_CONFIG_DIR: "/home/vscode/.claude"
       POWERLEVEL9K_DISABLE_GITSTATUS: "true"
     command: sleep infinity
+    networks:
+      - public
 
 volumes:
   claude-code-bashhistory:
   claude-code-config:
+
+networks:
+  public:
+    driver: bridge
+  # private:
+  #   driver: bridge
+  #   internal: true
