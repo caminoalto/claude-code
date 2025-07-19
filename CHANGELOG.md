@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2024-07-19
+
+### Added
+
+- Gemini CLI to devcontainer dependencies
+
 ## [0.2.1] - 2024-07-14
 
 ### Fixed
